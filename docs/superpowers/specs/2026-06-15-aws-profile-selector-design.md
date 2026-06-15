@@ -19,14 +19,14 @@ is driven through a small `awsp` shell function that `eval`s the tool's stdout.
 ```
 $ awsp
 ? Select an AWS profile:        (interactive list with type-to-filter, on stderr)
-  > default                 (eu-central-1, sso)
-    root-user               (eu-central-1, static)
-    cfdeploy                (eu-central-1, role)
-    localstack              (us-east-1, static)
+  > default                 (us-east-1, sso)
+    profile-a               (us-east-1, static)
+    profile-b               (us-east-1, role)
+    profile-c               (eu-west-1, static)
 ? Apply how?
   > This terminal session only
     Save as default (also applies now)
-✓ AWS_PROFILE=cfdeploy set for this session
+✓ AWS_PROFILE=profile-b set for this session
 ```
 
 The shell wrapper runs `eval "$(aws-profile-selector select "$@")"`. The tool
@@ -82,7 +82,7 @@ Each is independently testable with a single clear responsibility.
   placeholder ("type to filter…") — case-insensitive substring filtering by
   profile name.
 - Display converter renders `name  (region, type)`, e.g.
-  `cfdeploy  (eu-central-1, role)`.
+  `profile-b  (us-east-1, role)`.
 - Second prompt: a plain `SelectionPrompt` for apply mode
   (session-only / save-as-default).
 
