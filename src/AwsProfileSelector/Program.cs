@@ -5,9 +5,13 @@ using Spectre.Console;
 using Spectre.Console.Cli;
 
 // All interactive UI goes to stderr so stdout carries only the `export` line.
+// Force interactivity: under the `awsp` wrapper stdout is captured by `eval "$(...)"`,
+// so Spectre's default detection (which keys off stdout) would otherwise refuse the
+// prompt. stderr is the real terminal, so the prompt renders fine there.
 IAnsiConsole err = AnsiConsole.Create(new AnsiConsoleSettings
 {
     Out = new AnsiConsoleOutput(Console.Error),
+    Interactive = InteractionSupport.Yes,
 });
 
 var services = new ServiceCollection();
