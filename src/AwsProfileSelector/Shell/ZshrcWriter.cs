@@ -19,7 +19,8 @@ public static class ZshrcWriter
             var endIndex = lines.IndexOf(end, startIndex);
             if (endIndex < 0)
             {
-                endIndex = lines.Count - 1;
+                // Malformed: end marker absent — remove only the orphaned start marker.
+                endIndex = startIndex;
             }
 
             lines.RemoveRange(startIndex, endIndex - startIndex + 1);

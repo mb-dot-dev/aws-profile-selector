@@ -66,4 +66,21 @@ public class ZshrcWriterTests : IDisposable
         Assert.Contains("export AWS_PROFILE=beta", text);
         Assert.DoesNotContain("export AWS_PROFILE=alpha", text);
     }
+
+    [Fact]
+    public void Preserves_content_after_orphaned_start_marker()
+    {
+        File.WriteAllText(_path,
+            "export EDITOR=vim\n" +
+            "# >>> aws-profile-selector default >>>\n" +
+            "export AWS_PROFILE=alpha\n" +
+            "export IMPORTANT=keep-me\n");
+
+        ZshrcWriter.UpsertBlock(_path, "default", "export AWS_PROFILE=beta");
+
+        var text = File.ReadAllText(_path);
+        Assert.Contains("export EDITOR=vim", text);
+        Assert.Contains("export IMPORTANT=keep-me", text);
+        Assert.Contains("export AWS_PROFILE=beta", text);
+    }
 }

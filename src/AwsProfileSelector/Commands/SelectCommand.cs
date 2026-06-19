@@ -39,8 +39,8 @@ public sealed class SelectCommand : Command<SelectSettings>
         var profile = selector.SelectProfile(profiles);
         var mode = selector.SelectApplyMode();
 
-        // stdout is consumed by the shell wrapper's eval — keep it plain.
-        Console.Out.WriteLine($"export AWS_PROFILE={profile.Name}");
+        // stdout is consumed by the shell wrapper's eval — single-quote to prevent expansion.
+        Console.Out.WriteLine($"export AWS_PROFILE={ShellQuote.Escape(profile.Name)}");
 
         if (mode == ApplyMode.Default)
         {
@@ -49,7 +49,7 @@ public sealed class SelectCommand : Command<SelectSettings>
                 ".zshrc");
             try
             {
-                ZshrcWriter.UpsertBlock(zshrc, "default", $"export AWS_PROFILE={profile.Name}");
+                ZshrcWriter.UpsertBlock(zshrc, "default", $"export AWS_PROFILE={ShellQuote.Escape(profile.Name)}");
                 _err.MarkupLineInterpolated(
                     $"[green]✓[/] Saved [bold]{profile.Name}[/] as default in {zshrc}");
             }
